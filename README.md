@@ -31,7 +31,7 @@ Planned and in-progress features include:
 
 ## 🖼️ Logo
 
-![InfiniteYieldV2 Logo](assets/logo.png)
+![InfiniteYieldV2 Logo](assets/logo.png) 
 
 ---
 
