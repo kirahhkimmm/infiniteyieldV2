@@ -289,6 +289,36 @@ Title.ZIndex = 10
 table.insert(shade1,Title)
 table.insert(text1,Title)
 
+-- Make the main window rectangular, draggable, and toggleable via RightShift
+pcall(function()
+	-- remove any rounding to enforce rectangle appearance
+	for _, d in pairs(Holder:GetDescendants()) do
+		if d:IsA("UICorner") then
+			d:Destroy()
+		end
+	end
+
+	-- ensure UserInputService is available
+	local UIS = GetService("UserInputService") or game:GetService("UserInputService")
+
+	-- enable dragging for the main Holder
+	if type(dragGUI) == "function" then
+		pcall(function() dragGUI(Holder) end)
+	end
+
+	-- toggle visibility with RightShift, ignore when typing
+	Holder.Visible = true
+	UIS.InputBegan:Connect(function(input, gameProcessed)
+		if gameProcessed then return end
+		if input.KeyCode == Enum.KeyCode.RightShift then
+			-- do not toggle if a TextBox has focus
+			local focused = UIS:GetFocusedTextBox()
+			if focused and focused ~= "" then return end
+			Holder.Visible = not Holder.Visible
+		end
+	end)
+end)
+
 Dark.Name = "Dark"
 Dark.Parent = Holder
 Dark.Active = true
