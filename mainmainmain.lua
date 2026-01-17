@@ -1,7 +1,3 @@
--- Winkira's Universal (improved rebrand of Infinite Yield)
--- Author: Winkira (improved build)
--- Minimal, non-destructive changes: preserves compatibility with existing globals.
-
 if (IY_LOADED or getgenv().WINKIRA_UNIVERSAL_LOADED) and not (_G and _G.IY_DEBUG == true) then
 	return
 end
