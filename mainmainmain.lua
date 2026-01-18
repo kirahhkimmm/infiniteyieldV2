@@ -213,7 +213,7 @@ end
 local WINKIRA_CONFIG = {
 	brand = BRAND_NAME,
 	version = currentVersion,
-	prefix = "!",
+	prefix = ";",
 }
 pcall(function() getgenv().WINKIRA_CONFIG = WINKIRA_CONFIG end)
 
