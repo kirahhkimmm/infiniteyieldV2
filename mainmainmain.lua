@@ -12818,29 +12818,66 @@ task.spawn(function()
 		ExitImage.Image = "rbxassetid://5054663650"
 		ExitImage.ZIndex = 10
 
+		-- create Update button (if a Source is provided) so user can opt-in to update
+		local Update = Instance.new("TextButton")
+		Update.Name = "Update"
+		Update.Parent = shadow
+		Update.BackgroundTransparency = 0
+		Update.BackgroundColor3 = Color3.fromRGB(60, 60, 61)
+		Update.Position = UDim2.new(0.7, 0, 0, 0)
+		Update.Size = UDim2.new(0, 70, 0, 20)
+		Update.Font = Enum.Font.SourceSans
+		Update.TextSize = 14
+		Update.Text = "Update"
+		Update.TextColor3 = currentText1
+		Update.ZIndex = 11
+
 		wait(1)
 		AnnGUI:TweenPosition(UDim2.new(0.5, -180, 0, 150), "InOut", "Quart", 0.5, true, nil)
 
-		Exit.MouseButton1Click:Connect(function()
-			AnnGUI:TweenPosition(UDim2.new(0.5, -180, 0, -500), "InOut", "Quart", 0.5, true, nil)
-			wait(0.6)
-			AnnGUI:Destroy()
+		local function destroyAnn()
+			if AnnGUI and AnnGUI.Parent then
+				AnnGUI:TweenPosition(UDim2.new(0.5, -180, 0, -500), "InOut", "Quart", 0.5, true, nil)
+				task.delay(0.6, function()
+					if AnnGUI and AnnGUI.Parent then
+						AnnGUI:Destroy()
+					end
+				end)
+			end
+		end
+
+		Exit.MouseButton1Click:Connect(destroyAnn)
+
+		Update.MouseButton1Click:Connect(function()
+			-- prevent double-clicks
+			Update.Active = false
+			Update.Text = "Updating..."
+			task.spawn(function()
+				if latest.Source and latest.Source ~= '' then
+					local ok2, res = pcall(function()
+						return game:HttpGet(latest.Source, true)
+					end)
+					if ok2 and type(res) == 'string' and res:len() > 10 then
+						local ok3, fn = pcall(function() return loadstring(res) end)
+						if ok3 and type(fn) == 'function' then
+							pcall(fn)
+						else
+							notify('Update failed', 'Downloaded code could not be loaded')
+						end
+					else
+						notify('Update failed', 'Could not download update')
+					end
+				else
+					notify('No update', 'No remote Source specified')
+				end
+				destroyAnn()
+			end)
 		end)
 	end
 
-	-- Automatic update: if newer version present, try to load `Source` field
+	-- Notify if newer version available but do NOT auto-run remote code to avoid crashes
 	if latest.Version and latest.Version ~= currentVersion then
-		if latest.Source and latest.Source ~= '' then
-			pcall(function()
-				local newcode = game:HttpGet(latest.Source, true)
-				local fn = loadstring(newcode)
-				if type(fn) == 'function' then
-					fn()
-				end
-			end)
-		else
-			notify('Outdated', 'New version available: '..tostring(latest.Version))
-		end
+		notify('Update available', 'Version '..tostring(latest.Version)..' is available. Click Update to apply.')
 	end
 end)
 
