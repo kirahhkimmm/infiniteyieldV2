@@ -214,6 +214,7 @@ local WINKIRA_CONFIG = {
 	brand = BRAND_NAME,
 	version = currentVersion,
 	prefix = ";",
+	windowMode = false,
 }
 pcall(function() getgenv().WINKIRA_CONFIG = WINKIRA_CONFIG end)
 
@@ -241,6 +242,151 @@ end
 
 PARENT = createParentGui()
 
+-- Apply window mode styling when enabled
+local function applyWindowMode(enabled)
+	if enabled then
+		-- make holder a centered window with larger size
+		Holder.Position = UDim2.new(0.5, -200, 0.5, -150)
+		Holder.Size = UDim2.new(0, 400, 0, 300)
+		Holder.BackgroundColor3 = Color3.fromRGB(44,44,45)
+		-- ensure draggable
+		if type(dragGUI) == "function" then
+			pcall(function() dragGUI(Holder) end)
+		else
+			local dragging, dragInput, dragStart, startPos
+			Holder.InputBegan:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseButton1 then
+					dragging = true
+					dragStart = input.Position
+					startPos = Holder.Position
+					input.Changed:Connect(function()
+						if input.UserInputState == Enum.UserInputState.End then
+							dragging = false
+						end
+					end)
+				end
+			end)
+			Holder.InputChanged:Connect(function(input)
+				if input.UserInputType == Enum.UserInputType.MouseMovement then
+					dragInput = input
+				end
+			end)
+			GetService("UserInputService").InputChanged:Connect(function(input)
+				if dragging and input == dragInput then
+					local delta = input.Position - dragStart
+					Holder.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+				end
+			end)
+		end
+
+		-- add header profile and info buttons if missing
+		if not Holder:FindFirstChild('WindowHeader') then
+			local header = Instance.new('Frame')
+			header.Name = 'WindowHeader'
+			header.Parent = Holder
+			header.BackgroundTransparency = 1
+			header.Size = UDim2.new(1,0,0,24)
+			header.Position = UDim2.new(0,0,0,0)
+
+			local profile = Instance.new('TextLabel')
+			profile.Name = 'Profile'
+			profile.Parent = header
+			profile.BackgroundTransparency = 1
+			profile.Position = UDim2.new(0,4,0,2)
+			profile.Size = UDim2.new(0,140,1,-4)
+			profile.Font = Enum.Font.SourceSans
+			profile.TextSize = 14
+			profile.TextColor3 = Color3.new(1,1,1)
+			profile.Text = Players.LocalPlayer and Players.LocalPlayer.Name or 'Profile'
+
+			local infoBtn = Instance.new('ImageButton')
+			infoBtn.Name = 'Info'
+			infoBtn.Parent = header
+			infoBtn.BackgroundTransparency = 1
+			infoBtn.Size = UDim2.new(0,20,0,20)
+			infoBtn.Position = UDim2.new(1,-44,0,2)
+			infoBtn.Image = 'rbxassetid://1204397029'
+
+			local settingsBtn = Instance.new('ImageButton')
+			settingsBtn.Name = 'Settings'
+			settingsBtn.Parent = header
+			settingsBtn.BackgroundTransparency = 1
+			settingsBtn.Size = UDim2.new(0,20,0,20)
+			settingsBtn.Position = UDim2.new(1,-22,0,2)
+			settingsBtn.Image = 'rbxassetid://3523243755'
+		end
+
+		-- add a simple chat panel anchored to the right
+		if not PARENT:FindFirstChild('WinkiraChat') then
+			local chat = Instance.new('Frame')
+			chat.Name = 'WinkiraChat'
+			chat.Parent = PARENT
+			chat.BackgroundColor3 = Color3.fromRGB(36,36,37)
+			chat.BorderSizePixel = 0
+			chat.Position = UDim2.new(1, -220, 0.2, 0)
+			chat.Size = UDim2.new(0, 220, 0, 300)
+			chat.ZIndex = 9
+
+			local chatTitle = Instance.new('TextLabel')
+			chatTitle.Parent = chat
+			chatTitle.BackgroundTransparency = 1
+			chatTitle.Size = UDim2.new(1,0,0,20)
+			chatTitle.Font = Enum.Font.SourceSans
+			chatTitle.TextSize = 14
+			chatTitle.Text = 'Universal Chat'
+			chatTitle.TextColor3 = Color3.new(1,1,1)
+
+			local messages = Instance.new('ScrollingFrame')
+			messages.Name = 'Messages'
+			messages.Parent = chat
+			messages.BackgroundTransparency = 1
+			messages.Position = UDim2.new(0,0,0,20)
+			messages.Size = UDim2.new(1,0,1,-50)
+			messages.CanvasSize = UDim2.new(0,0,0,0)
+			messages.ZIndex = 9
+
+			local inputBox = Instance.new('TextBox')
+			inputBox.Parent = chat
+			inputBox.Position = UDim2.new(0,4,1,-24)
+			inputBox.Size = UDim2.new(1,-48,0,20)
+			inputBox.Font = Enum.Font.SourceSans
+			inputBox.TextSize = 14
+
+			local send = Instance.new('TextButton')
+			send.Parent = chat
+			send.Position = UDim2.new(1,-40,1,-24)
+			send.Size = UDim2.new(0,36,0,20)
+			send.Text = 'Send'
+
+			send.MouseButton1Click:Connect(function()
+				local txt = inputBox.Text
+				if txt and txt ~= '' then
+					local label = Instance.new('TextLabel')
+					label.Parent = messages
+					label.BackgroundTransparency = 1
+					label.Size = UDim2.new(1,-4,0,18)
+					label.Position = UDim2.new(0,2,0,messages.CanvasSize.Y.Offset)
+					label.Font = Enum.Font.SourceSans
+					label.TextSize = 14
+					label.TextColor3 = Color3.new(1,1,1)
+					label.Text = (Players.LocalPlayer and Players.LocalPlayer.Name or 'You')..': '..tostring(txt)
+					messages.CanvasSize = UDim2.new(0,0,0,messages.CanvasSize.Y.Offset + 20)
+					inputBox.Text = ''
+				end
+			end)
+		end
+	else
+		-- restore original compact layout
+		Holder.Position = UDim2.new(1, -250, 1, -220)
+		Holder.Size = UDim2.new(0, 250, 0, 220)
+		-- remove chat if present
+		local ch = PARENT:FindFirstChild('WinkiraChat')
+		if ch then ch:Destroy() end
+		local header = Holder:FindFirstChild('WindowHeader')
+		if header then header:Destroy() end
+	end
+end
+
 shade1 = {}
 shade2 = {}
 shade3 = {}
@@ -257,6 +403,9 @@ Holder.Position = UDim2.new(1, -250, 1, -220)
 Holder.Size = UDim2.new(0, 250, 0, 220)
 Holder.ZIndex = 10
 table.insert(shade2,Holder)
+
+-- Apply window mode on startup if configured
+pcall(function() applyWindowMode(WINKIRA_CONFIG.windowMode) end)
 
 Title.Name = "Title"
 Title.Parent = Holder
@@ -1206,6 +1355,65 @@ TP.TextColor3 = Color3.new(0, 0, 0)
 TP.ZIndex = 10
 table.insert(shade3,TP)
 table.insert(text2,TP)
+-- Window Mode setting: toggle a windowed UI with chat and header
+WindowMode = Instance.new("TextLabel")
+WindowMode.Name = "WindowMode"
+WindowMode.Parent = SettingsHolder
+WindowMode.BackgroundColor3 = Color3.fromRGB(46, 46, 47)
+WindowMode.BorderSizePixel = 0
+WindowMode.BackgroundTransparency = 1
+WindowMode.Position = UDim2.new(0, 5, 0, 60)
+WindowMode.Size = UDim2.new(1, -10, 0, 20)
+WindowMode.Font = Enum.Font.SourceSans
+WindowMode.TextSize = 14
+WindowMode.Text = "Window Mode (centered window + chat)"
+WindowMode.TextColor3 = Color3.new(1, 1, 1)
+WindowMode.TextXAlignment = Enum.TextXAlignment.Left
+WindowMode.ZIndex = 10
+table.insert(shade2,WindowMode)
+table.insert(text1,WindowMode)
+
+WindowModeButton = Instance.new('Frame')
+WindowModeButton.Name = 'Button'
+WindowModeButton.Parent = WindowMode
+WindowModeButton.BackgroundColor3 = Color3.fromRGB(78, 78, 79)
+WindowModeButton.BorderSizePixel = 0
+WindowModeButton.Position = UDim2.new(1, -20, 0, 0)
+WindowModeButton.Size = UDim2.new(0, 20, 0, 20)
+WindowModeButton.ZIndex = 10
+table.insert(shade3,WindowModeButton)
+
+WindowModeOn = Instance.new('TextButton')
+WindowModeOn.Name = 'On'
+WindowModeOn.Parent = WindowModeButton
+WindowModeOn.BackgroundColor3 = Color3.fromRGB(150,150,151)
+WindowModeOn.BackgroundTransparency = 1
+WindowModeOn.BorderSizePixel = 0
+WindowModeOn.Position = UDim2.new(0,2,0,2)
+WindowModeOn.Size = UDim2.new(0,16,0,16)
+WindowModeOn.Font = Enum.Font.SourceSans
+WindowModeOn.TextSize = 14
+WindowModeOn.Text = ''
+WindowModeOn.ZIndex = 10
+
+-- initialize state
+pcall(function()
+	if WINKIRA_CONFIG.windowMode then
+		WindowModeOn.BackgroundTransparency = 0
+	else
+		WindowModeOn.BackgroundTransparency = 1
+	end
+end)
+
+WindowModeOn.MouseButton1Click:Connect(function()
+	WINKIRA_CONFIG.windowMode = not WINKIRA_CONFIG.windowMode
+	if WINKIRA_CONFIG.windowMode then
+		WindowModeOn.BackgroundTransparency = 0
+	else
+		WindowModeOn.BackgroundTransparency = 1
+	end
+	pcall(applyWindowMode, WINKIRA_CONFIG.windowMode)
+end)
 
 AliasesFrame.Name = "AliasesFrame"
 AliasesFrame.Parent = Settings
@@ -2871,7 +3079,7 @@ reference = (function()
 	local lastPress = nil
 	inviteButton.MouseButton1Click:Connect(function()
 		if everyClipboard then
-			toClipboard("https://discord.gg/78ZuWSq")
+			toClipboard("https://discord.gg/TRQXCv6DaY")
 			inviteButton.Text = "Copied"
 		else
 			inviteButton.Text = "No Clipboard Function, type out the link"
@@ -2880,7 +3088,7 @@ reference = (function()
 		lastPress = pressTime
 		wait(2)
 		if lastPress ~= pressTime then return end
-		inviteButton.Text = "Copy Discord Invite Link (https://discord.gg/78ZuWSq)"
+		inviteButton.Text = "Copy Discord Invite Link (https://discord.gg/TRQXCv6DaY)"
 	end)
 	dragGUI(main)
 	main.Parent = PARENT
