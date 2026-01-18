@@ -21,7 +21,23 @@ if not game:IsLoaded() then
 end
 
 -- Semantic version for this release
+-- Semantic version for this release (default)
 currentVersion = "6.1"
+
+-- Try to read version from remote update.json; fall back to default if unavailable
+do
+	local ok, raw = pcall(function()
+		return game:HttpGet('https://raw.githubusercontent.com/kirahhkimmm/winkiras-menu/refs/heads/main/update.json', true)
+	end)
+	if ok and raw and #raw > 0 then
+		local success, decoded = pcall(function()
+			return game:GetService('HttpService'):JSONDecode(raw)
+		end)
+		if success and type(decoded) == 'table' and decoded.Version then
+			currentVersion = tostring(decoded.Version)
+		end
+	end
+end
 
 -- Branding name used in UI (keeps original variable names for compatibility)
 BRAND_NAME = "Winkira's Universal"
