@@ -12734,97 +12734,112 @@ end
 IYMouse.Move:Connect(checkTT)
 
 task.spawn(function()
-	local success, latestVersionInfo = pcall(function() 
-		local versionJson = game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/version')
-		return HttpService:JSONDecode(versionJson)
+	local updateUrl = 'https://raw.githubusercontent.com/kirahhkimmm/winkiras-menu/refs/heads/main/update.json'
+	local ok, latest = pcall(function()
+		local raw = game:HttpGet(updateUrl, true)
+		return HttpService:JSONDecode(raw)
 	end)
 
-	if success then
-		if currentVersion ~= latestVersionInfo.Version then
-			notify('Outdated','Get the new version at infyiff.github.io')
-		end
+	if not ok or type(latest) ~= 'table' then
+		return
+	end
 
-		if latestVersionInfo.Announcement and latestVersionInfo.Announcement ~= '' then
-			local AnnGUI = Instance.new("Frame")
-			local background = Instance.new("Frame")
-			local TextBox = Instance.new("TextLabel")
-			local shadow = Instance.new("Frame")
-			local PopupText = Instance.new("TextLabel")
-			local Exit = Instance.new("TextButton")
-			local ExitImage = Instance.new("ImageLabel")
+	-- Show announcement if present
+	if latest.Announcement and latest.Announcement ~= '' then
+		local AnnGUI = Instance.new("Frame")
+		local background = Instance.new("Frame")
+		local TextBox = Instance.new("TextLabel")
+		local shadow = Instance.new("Frame")
+		local PopupText = Instance.new("TextLabel")
+		local Exit = Instance.new("TextButton")
+		local ExitImage = Instance.new("ImageLabel")
 
-			AnnGUI.Name = randomString()
-			AnnGUI.Parent = PARENT
-			AnnGUI.Active = true
-			AnnGUI.BackgroundTransparency = 1
-			AnnGUI.Position = UDim2.new(0.5, -180, 0, -500)
-			AnnGUI.Size = UDim2.new(0, 360, 0, 20)
-			AnnGUI.ZIndex = 10
+		AnnGUI.Name = randomString()
+		AnnGUI.Parent = PARENT
+		AnnGUI.Active = true
+		AnnGUI.BackgroundTransparency = 1
+		AnnGUI.Position = UDim2.new(0.5, -180, 0, -500)
+		AnnGUI.Size = UDim2.new(0, 360, 0, 20)
+		AnnGUI.ZIndex = 10
 
-			background.Name = "background"
-			background.Parent = AnnGUI
-			background.Active = true
-			background.BackgroundColor3 = currentShade1
-			background.BorderSizePixel = 0
-			background.Position = UDim2.new(0, 0, 0, 20)
-			background.Size = UDim2.new(0, 360, 0, 150)
-			background.ZIndex = 10
+		background.Name = "background"
+		background.Parent = AnnGUI
+		background.Active = true
+		background.BackgroundColor3 = currentShade1
+		background.BorderSizePixel = 0
+		background.Position = UDim2.new(0, 0, 0, 20)
+		background.Size = UDim2.new(0, 360, 0, 150)
+		background.ZIndex = 10
 
-			TextBox.Parent = background
-			TextBox.BackgroundTransparency = 1
-			TextBox.Position = UDim2.new(0, 5, 0, 5)
-			TextBox.Size = UDim2.new(0, 350, 0, 140)
-			TextBox.Font = Enum.Font.SourceSans
-			TextBox.TextSize = 18
-			TextBox.TextWrapped = true
-			TextBox.Text = Announcement
-			TextBox.TextColor3 = currentText1
-			TextBox.TextXAlignment = Enum.TextXAlignment.Left
-			TextBox.TextYAlignment = Enum.TextYAlignment.Top
-			TextBox.ZIndex = 10
+		TextBox.Parent = background
+		TextBox.BackgroundTransparency = 1
+		TextBox.Position = UDim2.new(0, 5, 0, 5)
+		TextBox.Size = UDim2.new(0, 350, 0, 140)
+		TextBox.Font = Enum.Font.SourceSans
+		TextBox.TextSize = 18
+		TextBox.TextWrapped = true
+		TextBox.Text = latest.Announcement
+		TextBox.TextColor3 = currentText1
+		TextBox.TextXAlignment = Enum.TextXAlignment.Left
+		TextBox.TextYAlignment = Enum.TextYAlignment.Top
+		TextBox.ZIndex = 10
 
-			shadow.Name = "shadow"
-			shadow.Parent = AnnGUI
-			shadow.BackgroundColor3 = currentShade2
-			shadow.BorderSizePixel = 0
-			shadow.Size = UDim2.new(0, 360, 0, 20)
-			shadow.ZIndex = 10
+		shadow.Name = "shadow"
+		shadow.Parent = AnnGUI
+		shadow.BackgroundColor3 = currentShade2
+		shadow.BorderSizePixel = 0
+		shadow.Size = UDim2.new(0, 360, 0, 20)
+		shadow.ZIndex = 10
 
-			PopupText.Name = "PopupText"
-			PopupText.Parent = shadow
-			PopupText.BackgroundTransparency = 1
-			PopupText.Size = UDim2.new(1, 0, 0.95, 0)
-			PopupText.ZIndex = 10
-			PopupText.Font = Enum.Font.SourceSans
-			PopupText.TextSize = 14
-			PopupText.Text = "Server Announcement"
-			PopupText.TextColor3 = currentText1
-			PopupText.TextWrapped = true
+		PopupText.Name = "PopupText"
+		PopupText.Parent = shadow
+		PopupText.BackgroundTransparency = 1
+		PopupText.Size = UDim2.new(1, 0, 0.95, 0)
+		PopupText.ZIndex = 10
+		PopupText.Font = Enum.Font.SourceSans
+		PopupText.TextSize = 14
+		PopupText.Text = "Server Announcement"
+		PopupText.TextColor3 = currentText1
+		PopupText.TextWrapped = true
 
-			Exit.Name = "Exit"
-			Exit.Parent = shadow
-			Exit.BackgroundTransparency = 1
-			Exit.Position = UDim2.new(1, -20, 0, 0)
-			Exit.Size = UDim2.new(0, 20, 0, 20)
-			Exit.Text = ""
-			Exit.ZIndex = 10
+		Exit.Name = "Exit"
+		Exit.Parent = shadow
+		Exit.BackgroundTransparency = 1
+		Exit.Position = UDim2.new(1, -20, 0, 0)
+		Exit.Size = UDim2.new(0, 20, 0, 20)
+		Exit.Text = ""
+		Exit.ZIndex = 10
 
-			ExitImage.Parent = Exit
-			ExitImage.BackgroundColor3 = Color3.new(1, 1, 1)
-			ExitImage.BackgroundTransparency = 1
-			ExitImage.Position = UDim2.new(0, 5, 0, 5)
-			ExitImage.Size = UDim2.new(0, 10, 0, 10)
-			ExitImage.Image = "rbxassetid://5054663650"
-			ExitImage.ZIndex = 10
+		ExitImage.Parent = Exit
+		ExitImage.BackgroundColor3 = Color3.new(1, 1, 1)
+		ExitImage.BackgroundTransparency = 1
+		ExitImage.Position = UDim2.new(0, 5, 0, 5)
+		ExitImage.Size = UDim2.new(0, 10, 0, 10)
+		ExitImage.Image = "rbxassetid://5054663650"
+		ExitImage.ZIndex = 10
 
-			wait(1)
-			AnnGUI:TweenPosition(UDim2.new(0.5, -180, 0, 150), "InOut", "Quart", 0.5, true, nil)
+		wait(1)
+		AnnGUI:TweenPosition(UDim2.new(0.5, -180, 0, 150), "InOut", "Quart", 0.5, true, nil)
 
-			Exit.MouseButton1Click:Connect(function()
-				AnnGUI:TweenPosition(UDim2.new(0.5, -180, 0, -500), "InOut", "Quart", 0.5, true, nil)
-				wait(0.6)
-				AnnGUI:Destroy()
+		Exit.MouseButton1Click:Connect(function()
+			AnnGUI:TweenPosition(UDim2.new(0.5, -180, 0, -500), "InOut", "Quart", 0.5, true, nil)
+			wait(0.6)
+			AnnGUI:Destroy()
+		end)
+	end
+
+	-- Automatic update: if newer version present, try to load `Source` field
+	if latest.Version and latest.Version ~= currentVersion then
+		if latest.Source and latest.Source ~= '' then
+			pcall(function()
+				local newcode = game:HttpGet(latest.Source, true)
+				local fn = loadstring(newcode)
+				if type(fn) == 'function' then
+					fn()
+				end
 			end)
+		else
+			notify('Outdated', 'New version available: '..tostring(latest.Version))
 		end
 	end
 end)
