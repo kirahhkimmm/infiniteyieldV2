@@ -15,7 +15,7 @@ Players = cloneref(game:GetService("Players"))
 if not game:IsLoaded() then
     local notLoaded = Instance.new("Message")
     notLoaded.Parent = COREGUI
-    notLoaded.Text = "Infinite Yield is waiting for the game to load"
+    notLoaded.Text = "Winkira Universal V2 is waiting for the game to load"
     game.Loaded:Wait()
     notLoaded:Destroy()
 end
@@ -40,7 +40,18 @@ do
 end
 
 -- Branding name used in UI (keeps original variable names for compatibility)
-BRAND_NAME = "Winkira's Universal"
+BRAND_NAME = "Winkira Universal V2"
+BRAND_SHORT = "WK V2"
+
+WINKIRA_V2_THEME = {
+	shade1 = Color3.fromRGB(20, 28, 38),
+	shade2 = Color3.fromRGB(29, 40, 55),
+	shade3 = Color3.fromRGB(106, 188, 255),
+	text1 = Color3.fromRGB(236, 244, 255),
+	text2 = Color3.fromRGB(9, 17, 29),
+	scroll = Color3.fromRGB(85, 156, 222),
+	accent = Color3.fromRGB(130, 213, 255),
+}
 
 Holder = Instance.new("Frame")
 Title = Instance.new("TextLabel")
@@ -251,7 +262,7 @@ scroll = {}
 Holder.Name = randomString()
 Holder.Parent = PARENT
 Holder.Active = true
-Holder.BackgroundColor3 = Color3.fromRGB(46, 46, 47)
+Holder.BackgroundColor3 = WINKIRA_V2_THEME.shade2
 Holder.BorderSizePixel = 0
 Holder.Position = UDim2.new(1, -250, 1, -220)
 Holder.Size = UDim2.new(0, 250, 0, 220)
@@ -261,7 +272,7 @@ table.insert(shade2,Holder)
 Title.Name = "Title"
 Title.Parent = Holder
 Title.Active = true
-Title.BackgroundColor3 = Color3.fromRGB(36,36,37)
+Title.BackgroundColor3 = WINKIRA_V2_THEME.shade1
 Title.BorderSizePixel = 0
 Title.Size = UDim2.new(0, 250, 0, 20)
 Title.Font = Enum.Font.SourceSans
@@ -301,15 +312,8 @@ Title.ZIndex = 10
 table.insert(shade1,Title)
 table.insert(text1,Title)
 
--- Make the main window rectangular, draggable, and toggleable via RightShift
+-- Enable dragging and toggle visibility via RightShift
 pcall(function()
-	-- remove any rounding to enforce rectangle appearance
-	for _, d in pairs(Holder:GetDescendants()) do
-		if d:IsA("UICorner") then
-			d:Destroy()
-		end
-	end
-
 	-- ensure UserInputService is available
 	local UIS = GetService("UserInputService") or game:GetService("UserInputService")
 
@@ -334,7 +338,7 @@ end)
 Dark.Name = "Dark"
 Dark.Parent = Holder
 Dark.Active = true
-Dark.BackgroundColor3 = Color3.fromRGB(36, 36, 37)
+Dark.BackgroundColor3 = WINKIRA_V2_THEME.shade1
 Dark.BorderSizePixel = 0
 Dark.Position = UDim2.new(0, 0, 0, 45)
 Dark.Size = UDim2.new(0, 250, 0, 175)
@@ -353,7 +357,7 @@ Cmdbar.TextXAlignment = Enum.TextXAlignment.Left
 Cmdbar.TextColor3 = Color3.new(1, 1, 1)
 Cmdbar.Text = ""
 Cmdbar.ZIndex = 10
-Cmdbar.PlaceholderText = "Command Bar"
+Cmdbar.PlaceholderText = "Winkira Command Bar"
 
 CMDsF.Name = "CMDs"
 CMDsF.Parent = Holder
@@ -361,7 +365,7 @@ CMDsF.BackgroundTransparency = 1
 CMDsF.BorderSizePixel = 0
 CMDsF.Position = UDim2.new(0, 5, 0, 45)
 CMDsF.Size = UDim2.new(0, 245, 0, 175)
-CMDsF.ScrollBarImageColor3 = Color3.fromRGB(78,78,79)
+CMDsF.ScrollBarImageColor3 = WINKIRA_V2_THEME.scroll
 CMDsF.BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png"
 CMDsF.CanvasSize = UDim2.new(0, 0, 0, 0)
 CMDsF.MidImage = "rbxasset://textures/ui/Scroll/scroll-middle.png"
@@ -393,7 +397,7 @@ ReferenceButton.ZIndex = 10
 Settings.Name = "Settings"
 Settings.Parent = Holder
 Settings.Active = true
-Settings.BackgroundColor3 = Color3.fromRGB(36, 36, 37)
+Settings.BackgroundColor3 = WINKIRA_V2_THEME.shade1
 Settings.BorderSizePixel = 0
 Settings.Position = UDim2.new(0, 0, 0, 220)
 Settings.Size = UDim2.new(0, 250, 0, 175)
@@ -406,7 +410,7 @@ SettingsHolder.Parent = Settings
 SettingsHolder.BackgroundTransparency = 1
 SettingsHolder.BorderSizePixel = 0
 SettingsHolder.Size = UDim2.new(1,0,1,0)
-SettingsHolder.ScrollBarImageColor3 = Color3.fromRGB(78,78,79)
+SettingsHolder.ScrollBarImageColor3 = WINKIRA_V2_THEME.scroll
 SettingsHolder.BottomImage = "rbxasset://textures/ui/Scroll/scroll-middle.png"
 SettingsHolder.CanvasSize = UDim2.new(0, 0, 0, 235)
 SettingsHolder.MidImage = "rbxasset://textures/ui/Scroll/scroll-middle.png"
@@ -434,7 +438,7 @@ table.insert(text1,Prefix)
 
 PrefixBox.Name = "PrefixBox"
 PrefixBox.Parent = Prefix
-PrefixBox.BackgroundColor3 = Color3.fromRGB(78, 78, 79)
+PrefixBox.BackgroundColor3 = WINKIRA_V2_THEME.shade3
 PrefixBox.BorderSizePixel = 0
 PrefixBox.Position = UDim2.new(1, -20, 0, 0)
 PrefixBox.Size = UDim2.new(0, 20, 0, 20)
@@ -448,7 +452,7 @@ table.insert(text2,PrefixBox)
 
 function makeSettingsButton(name,iconID,off)
 	local button = Instance.new("TextButton")
-	button.BackgroundColor3 = Color3.fromRGB(46, 46, 47)
+	button.BackgroundColor3 = WINKIRA_V2_THEME.shade2
 	button.BorderSizePixel = 0
 	button.Position = UDim2.new(0,0,0,0)
 	button.Size = UDim2.new(1,0,0,25)
@@ -520,7 +524,7 @@ table.insert(text1,StayOpen)
 
 Button.Name = "Button"
 Button.Parent = StayOpen
-Button.BackgroundColor3 = Color3.fromRGB(78, 78, 79)
+Button.BackgroundColor3 = WINKIRA_V2_THEME.shade3
 Button.BorderSizePixel = 0
 Button.Position = UDim2.new(1, -20, 0, 0)
 Button.Size = UDim2.new(0, 20, 0, 20)
@@ -588,7 +592,7 @@ Title_2.BorderSizePixel = 0
 Title_2.Size = UDim2.new(0, 250, 0, 20)
 Title_2.Font = Enum.Font.SourceSans
 Title_2.TextSize = 14
-Title_2.Text = "Notification Title"
+Title_2.Text = "Winkira Notification"
 Title_2.TextColor3 = Color3.new(1, 1, 1)
 Title_2.ZIndex = 10
 table.insert(shade2,Title_2)
@@ -683,7 +687,7 @@ table.insert(text1,Description)
 IntroBackground.Name = "IntroBackground"
 IntroBackground.Parent = Holder
 IntroBackground.Active = true
-IntroBackground.BackgroundColor3 = Color3.fromRGB(36, 36, 37)
+IntroBackground.BackgroundColor3 = WINKIRA_V2_THEME.shade1
 IntroBackground.BorderSizePixel = 0
 IntroBackground.Position = UDim2.new(0, 0, 0, 45)
 IntroBackground.Size = UDim2.new(0, 250, 0, 175)
@@ -707,7 +711,7 @@ Credits.Position = UDim2.new(0, 0, 0.9, 30)
 Credits.Size = UDim2.new(0, 250, 0, 20)
 Credits.Font = Enum.Font.SourceSansLight
 Credits.FontSize = Enum.FontSize.Size18
-Credits.Text = "Edge // Zwolf // Moon // Toon"
+Credits.Text = "Winkira Universal V2"
 Credits.TextColor3 = Color3.new(1, 1, 1)
 Credits.ZIndex = 10
 
@@ -1544,7 +1548,7 @@ PluginsHint.Position = UDim2.new(0, 25, 0, 40)
 PluginsHint.Size = UDim2.new(0, 200, 0, 50)
 PluginsHint.Font = Enum.Font.SourceSansItalic
 PluginsHint.TextSize = 16
-PluginsHint.Text = "Download plugins from the IY Discord (discord.gg/TRQXCv6DaY)"
+PluginsHint.Text = "Get plugins from Winkira support (discord.gg/dYHag43eeU)"
 PluginsHint.TextColor3 = Color3.new(1, 1, 1)
 PluginsHint.TextStrokeColor3 = Color3.new(1, 1, 1)
 PluginsHint.TextWrapped = true
@@ -2851,9 +2855,9 @@ reference = (function()
 		{111,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Text",Parent={105},Position=UDim2.new(0,8,0,148),Size=UDim2.new(1,-8,0,16),Text="Setting up 'goto $1' on the OnChatted event will teleport you to any player that chats.",TextColor3=Color3.new(1,1,1),TextSize=14,TextWrapped=true,TextXAlignment=0,TextYAlignment=0,ZIndex=10,}},
 		{112,"Frame",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Name="Section",Parent={7},Size=UDim2.new(1,0,0,105),ZIndex=10,}},
 		{113,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=4,Name="Header",Parent={112},Position=UDim2.new(0,8,0,5),Size=UDim2.new(1,-8,0,20),Text="Get Further Help",TextColor3=Color3.new(1,1,1),TextSize=20,TextXAlignment=0,ZIndex=10,}},
-		{114,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Text",Parent={112},Position=UDim2.new(0,8,0,30),Size=UDim2.new(1,-8,0,32),Text="You can join the Discord server to get support with IY,  and read up on more documentation such as the Plugin API.",TextColor3=Color3.new(1,1,1),TextSize=14,TextWrapped=true,TextXAlignment=0,ZIndex=10,}},
+		{114,"TextLabel",{BackgroundColor3=Color3.new(1,1,1),BackgroundTransparency=1,Font=3,Name="Text",Parent={112},Position=UDim2.new(0,8,0,30),Size=UDim2.new(1,-8,0,32),Text="Join the Winkira support server for help and documentation such as the Plugin API.",TextColor3=Color3.new(1,1,1),TextSize=14,TextWrapped=true,TextXAlignment=0,ZIndex=10,}},
 		{115,"Frame",{BackgroundColor3=Color3.new(0.1803921610117,0.1803921610117,0.1843137294054),BorderSizePixel=0,Name="Line",Parent={112},Position=UDim2.new(0,10,1,-1),Size=UDim2.new(1,-20,0,1),Visible=false,ZIndex=10,}},
-		{116,"TextButton",{BackgroundColor3=Color3.new(0.48627451062202,0.61960786581039,0.85098040103912),BorderColor3=Color3.new(0.1803921610117,0.1803921610117,0.1843137294054),Font=4,Name="InviteButton",Parent={112},Position=UDim2.new(0,5,0,75),Size=UDim2.new(1,-10,0,25),Text="Copy Discord Invite Link (https://discord.gg/TRQXCv6DaY)",TextColor3=Color3.new(0.1803921610117,0.1803921610117,0.1843137294054),TextSize=16,ZIndex=10,}},
+		{116,"TextButton",{BackgroundColor3=Color3.new(0.48627451062202,0.61960786581039,0.85098040103912),BorderColor3=Color3.new(0.1803921610117,0.1803921610117,0.1843137294054),Font=4,Name="InviteButton",Parent={112},Position=UDim2.new(0,5,0,75),Size=UDim2.new(1,-10,0,25),Text="Copy Winkira Invite Link (https://discord.gg/dYHag43eeU)",TextColor3=Color3.new(0.1803921610117,0.1803921610117,0.1843137294054),TextSize=16,ZIndex=10,}},
 	})
 	for i,v in pairs(main.Content.List:GetDescendants()) do
 		if v:IsA("TextLabel") then
@@ -2871,7 +2875,7 @@ reference = (function()
 	local lastPress = nil
 	inviteButton.MouseButton1Click:Connect(function()
 		if everyClipboard then
-			toClipboard("https://discord.gg/TRQXCv6DaY")
+			toClipboard("https://discord.gg/dYHag43eeU")
 			inviteButton.Text = "Copied"
 		else
 			inviteButton.Text = "No Clipboard Function, type out the link"
@@ -2880,7 +2884,7 @@ reference = (function()
 		lastPress = pressTime
 		wait(2)
 		if lastPress ~= pressTime then return end
-		inviteButton.Text = "Copy Discord Invite Link (https://discord.gg/TRQXCv6DaY)"
+		inviteButton.Text = "Copy Winkira Invite Link (https://discord.gg/dYHag43eeU)"
 	end)
 	dragGUI(main)
 	main.Parent = PARENT
@@ -2890,12 +2894,12 @@ reference = (function()
 	end)
 end)()
 
-currentShade1 = Color3.fromRGB(36, 36, 37)
-currentShade2 = Color3.fromRGB(46, 46, 47)
-currentShade3 = Color3.fromRGB(78, 78, 79)
-currentText1 = Color3.new(1, 1, 1)
-currentText2 = Color3.new(0, 0, 0)
-currentScroll = Color3.fromRGB(78,78,79)
+currentShade1 = WINKIRA_V2_THEME.shade1
+currentShade2 = WINKIRA_V2_THEME.shade2
+currentShade3 = WINKIRA_V2_THEME.shade3
+currentText1 = WINKIRA_V2_THEME.text1
+currentText2 = WINKIRA_V2_THEME.text2
+currentScroll = WINKIRA_V2_THEME.scroll
 
 defaultsettings = {
 	prefix = ';';
@@ -2952,7 +2956,7 @@ createPopup = function(text)
     background.Name = "background"
     background.Parent = FileError
     background.Active = true
-    background.BackgroundColor3 = Color3.fromRGB(36, 36, 37)
+    background.BackgroundColor3 = currentShade1
     background.BorderSizePixel = 0
     background.Position = UDim2.new(0, 0, 0, 20)
     background.Size = UDim2.new(0, 360, 0, 205)
@@ -2975,7 +2979,7 @@ createPopup = function(text)
 
     shadow.Name = "shadow"
     shadow.Parent = FileError
-    shadow.BackgroundColor3 = Color3.fromRGB(46, 46, 47)
+    shadow.BackgroundColor3 = currentShade2
     shadow.BorderSizePixel = 0
     shadow.Size = UDim2.new(0, 360, 0, 20)
     shadow.ZIndex = 10
@@ -2988,7 +2992,7 @@ createPopup = function(text)
     PopupText.Font = Enum.Font.SourceSans
     PopupText.TextSize = 14
     PopupText.Text = "File Error"
-    PopupText.TextColor3 = Color3.new(1, 1, 1)
+    PopupText.TextColor3 = currentText1
     PopupText.TextWrapped = true
 
     Exit.Name = "Exit"
@@ -3076,7 +3080,7 @@ function saves()
         if jsonAttempts >= 10 then
             nosaves = true
             useFactorySettings()
-            createPopup("Sorry, we have attempted to parse your save file, but it is unreadable!\n\nInfinite Yield is now using factory settings until your exploit's file system works.\n\nYour save file has not been deleted.")
+            createPopup("Sorry, we have attempted to parse your save file, but it is unreadable!\n\nWinkira Universal V2 is now using factory settings until your exploit's file system works.\n\nYour save file has not been deleted.")
         else
             nosaves = true
             useFactorySettings()
@@ -3813,12 +3817,12 @@ ColorsButton.MouseButton1Click:Connect(function()
 			updatesaves()
 		end
 		Npicker.Default = function(self)
-			updateColors(Color3.fromRGB(36, 36, 37),shade1)
-			updateColors(Color3.fromRGB(46, 46, 47),shade2)
-			updateColors(Color3.fromRGB(78, 78, 79),shade3)
-			updateColors(Color3.new(1, 1, 1),text1)
-			updateColors(Color3.new(0, 0, 0),text2)
-			updateColors(Color3.fromRGB(78,78,79),scroll)
+			updateColors(WINKIRA_V2_THEME.shade1,shade1)
+			updateColors(WINKIRA_V2_THEME.shade2,shade2)
+			updateColors(WINKIRA_V2_THEME.shade3,shade3)
+			updateColors(WINKIRA_V2_THEME.text1,text1)
+			updateColors(WINKIRA_V2_THEME.text2,text2)
+			updateColors(WINKIRA_V2_THEME.scroll,scroll)
 			wait()
 			updatesaves()
 		end
@@ -3938,7 +3942,7 @@ SaveChatlogs.MouseButton1Down:Connect(function()
 		if #scroll_2:GetChildren() > 0 then
 			notify("Loading",'Hold on a sec')
 			local placeName = CleanFileName(MarketplaceService:GetProductInfo(PlaceId).Name)
-			local writelogs = '-- Infinite Yield Chat logs for "'..placeName..'"\n'
+			local writelogs = '-- Winkira Universal V2 chat logs for "'..placeName..'"\n'
 			for _, child in pairs(scroll_2:GetChildren()) do
 				writelogs = writelogs..'\n'..child.Text
 			end
@@ -4153,7 +4157,7 @@ end)
 
 PrefixBox:GetPropertyChangedSignal("Text"):Connect(function()
 	prefix = PrefixBox.Text
-	Cmdbar.PlaceholderText = "Command Bar ("..prefix..")"
+	Cmdbar.PlaceholderText = "Winkira Command Bar ("..prefix..")"
 	updatesaves()
 end)
 
@@ -4382,7 +4386,7 @@ function autoComplete(str,curText)
 end
 
 CMDs = {}
-CMDs[#CMDs + 1] = {NAME = 'discord / support / help', DESC = 'Invite to the Infinite Yield support server.'}
+CMDs[#CMDs + 1] = {NAME = 'discord / support / help', DESC = 'Invite to the Winkira support server.'}
 CMDs[#CMDs + 1] = {NAME = 'console', DESC = 'Loads Roblox console'}
 CMDs[#CMDs + 1] = {NAME = 'oldconsole', DESC = 'Loads old Roblox console'}
 CMDs[#CMDs + 1] = {NAME = 'explorer / dex', DESC = 'Opens DEX by Moon'}
@@ -4413,9 +4417,9 @@ CMDs[#CMDs + 1] = {NAME = 'hideguis', DESC = 'Hides any GUIs in PlayerGui'}
 CMDs[#CMDs + 1] = {NAME = 'unhideguis', DESC = 'Undoes hideguis'}
 CMDs[#CMDs + 1] = {NAME = 'guidelete', DESC = 'Enables backspace to delete GUI'}
 CMDs[#CMDs + 1] = {NAME = 'unguidelete / noguidelete', DESC = 'Disables guidelete'}
-CMDs[#CMDs + 1] = {NAME = 'hideiy', DESC = 'Hides the main IY GUI'}
-CMDs[#CMDs + 1] = {NAME = 'showiy / unhideiy', DESC = 'Shows IY again'}
-CMDs[#CMDs + 1] = {NAME = 'keepiy', DESC = 'Auto execute IY when you teleport through servers'}
+CMDs[#CMDs + 1] = {NAME = 'hideiy', DESC = 'Hides the main Winkira GUI'}
+CMDs[#CMDs + 1] = {NAME = 'showiy / unhideiy', DESC = 'Shows Winkira again'}
+CMDs[#CMDs + 1] = {NAME = 'keepiy', DESC = 'Auto execute Winkira when you teleport through servers'}
 CMDs[#CMDs + 1] = {NAME = 'unkeepiy', DESC = 'Disable keepiy'}
 CMDs[#CMDs + 1] = {NAME = 'togglekeepiy', DESC = 'Toggle keepiy'}
 CMDs[#CMDs + 1] = {NAME = 'savegame / saveplace', DESC = 'Uses saveinstance to save the game'}
@@ -5533,7 +5537,7 @@ Players.LocalPlayer.Chatted:Connect(function()
 	end
 end)
 
-Cmdbar.PlaceholderText = "Command Bar ("..prefix..")"
+Cmdbar.PlaceholderText = "Winkira Command Bar ("..prefix..")"
 Cmdbar:GetPropertyChangedSignal("Text"):Connect(function()
 	if Cmdbar:IsFocused() then
 		IndexContents(Cmdbar.Text,true,true)
@@ -6367,7 +6371,7 @@ local TeleportCheck = false
 Players.LocalPlayer.OnTeleport:Connect(function(State)
 	if KeepInfYield and (not TeleportCheck) and queueteleport then
 		TeleportCheck = true
-		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()")
+		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/kirahhkimmm/winkiras-menu/refs/heads/main/johnus.lua'))()")
 	end
 end)
 
@@ -7704,7 +7708,7 @@ addcmd('hideiy',{},function(args, speaker)
 	end
 	minimizeNum = 0
 	minimizeHolder()
-	if not (args[1] and tostring(args[1]) == 'nonotify') then notify('IY Hidden','You can press the prefix key to access the command bar') end
+	if not (args[1] and tostring(args[1]) == 'nonotify') then notify('Winkira Hidden','You can press the prefix key to access the command bar') end
 end)
 
 addcmd('showiy',{'unhideiy'},function(args, speaker)
@@ -12595,7 +12599,7 @@ if IsOnMobile then
 	QuickCapture.Position = UDim2.new(0.489, 0, 0, 0)
 	QuickCapture.Size = UDim2.new(0, 32, 0, 33)
 	QuickCapture.Font = Enum.Font.SourceSansBold
-	QuickCapture.Text = "IY"
+	QuickCapture.Text = "WK"
 	QuickCapture.TextColor3 = Color3.fromRGB(255, 255, 255)
 	QuickCapture.TextSize = 20.000
 	QuickCapture.TextWrapped = true
@@ -12611,12 +12615,113 @@ if IsOnMobile then
 	table.insert(text1, QuickCapture)
 end
 
+local function addWinkiraCorner(gui, radius)
+	if not (gui and gui.Parent) then return end
+	if gui:FindFirstChildOfClass("UICorner") then return end
+	local corner = Instance.new("UICorner")
+	corner.Name = "WinkiraCorner"
+	corner.CornerRadius = UDim.new(0, radius or 6)
+	corner.Parent = gui
+end
+
+local function addWinkiraStroke(gui, color, thickness, transparency)
+	if not (gui and gui.Parent) then return end
+	local existing = gui:FindFirstChild("WinkiraStroke")
+	if existing and existing:IsA("UIStroke") then
+		existing.Color = color
+		existing.Thickness = thickness
+		existing.Transparency = transparency
+		return
+	end
+	local stroke = Instance.new("UIStroke")
+	stroke.Name = "WinkiraStroke"
+	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	stroke.Color = color
+	stroke.Thickness = thickness
+	stroke.Transparency = transparency
+	stroke.Parent = gui
+end
+
+local function addWinkiraGradient(gui, colorA, colorB, rotation)
+	if not (gui and gui.Parent) then return end
+	local gradient = gui:FindFirstChild("WinkiraGradient")
+	if not gradient then
+		gradient = Instance.new("UIGradient")
+		gradient.Name = "WinkiraGradient"
+		gradient.Parent = gui
+	end
+	gradient.Color = ColorSequence.new(colorA, colorB)
+	gradient.Rotation = rotation or 90
+end
+
+local function mapV2Font(font)
+	if font == Enum.Font.SourceSansBold or font == Enum.Font.SourceSansSemibold then
+		return Enum.Font.GothamSemibold
+	elseif font == Enum.Font.SourceSansLight then
+		return Enum.Font.GothamMedium
+	elseif font == Enum.Font.SourceSansItalic then
+		return Enum.Font.Gotham
+	elseif font == Enum.Font.SourceSans then
+		return Enum.Font.Gotham
+	end
+	return font
+end
+
+local function applyWinkiraV2Visuals()
+	local roundableLists = {shade1, shade2, shade3}
+	for _, list in pairs(roundableLists) do
+		for _, obj in pairs(list) do
+			if typeof(obj) == "Instance" and obj.Parent and (obj:IsA("Frame") or obj:IsA("TextButton") or obj:IsA("TextBox") or obj:IsA("ScrollingFrame")) then
+				obj.BorderSizePixel = 0
+				local isThin = obj.Size.Y.Scale == 0 and obj.Size.Y.Offset > 0 and obj.Size.Y.Offset <= 2
+				if obj.Name ~= "Line" and not isThin then
+					addWinkiraCorner(obj, obj == Holder and 9 or 6)
+				end
+				if obj:IsA("TextButton") then
+					obj.AutoButtonColor = false
+				end
+			end
+		end
+	end
+
+	for _, list in pairs({text1, text2}) do
+		for _, obj in pairs(list) do
+			if typeof(obj) == "Instance" and obj.Parent and (obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox")) then
+				obj.Font = mapV2Font(obj.Font)
+			end
+		end
+	end
+
+	Title.Font = Enum.Font.GothamBold
+	Title.TextSize = 14
+	Cmdbar.Font = Enum.Font.Code
+	Cmdbar.TextSize = 16
+	Cmdbar.PlaceholderText = "Winkira Command Bar ("..prefix..")"
+	Credits.Font = Enum.Font.GothamMedium
+	Credits.Text = BRAND_NAME
+	Logo.ImageColor3 = WINKIRA_V2_THEME.accent
+
+	addWinkiraGradient(Title, Color3.fromRGB(32, 45, 64), Color3.fromRGB(23, 32, 45), 90)
+	addWinkiraGradient(Title_2, Color3.fromRGB(36, 52, 74), Color3.fromRGB(25, 37, 53), 90)
+	addWinkiraGradient(IntroBackground, Color3.fromRGB(20, 28, 38), Color3.fromRGB(30, 43, 60), 60)
+
+	addWinkiraStroke(Holder, WINKIRA_V2_THEME.accent, 1, 0.45)
+	addWinkiraStroke(Notification, WINKIRA_V2_THEME.accent, 1, 0.5)
+	addWinkiraStroke(Tooltip, WINKIRA_V2_THEME.accent, 1, 0.65)
+	addWinkiraStroke(Settings, WINKIRA_V2_THEME.accent, 1, 0.65)
+
+	SettingsButton.ImageColor3 = WINKIRA_V2_THEME.accent
+	ReferenceButton.ImageColor3 = WINKIRA_V2_THEME.accent
+	PinImage.ImageColor3 = WINKIRA_V2_THEME.accent
+end
+
 updateColors(currentShade1,shade1)
 updateColors(currentShade2,shade2)
 updateColors(currentShade3,shade3)
 updateColors(currentText1,text1)
 updateColors(currentText2,text2)
 updateColors(currentScroll,scroll)
+applyWinkiraV2Visuals()
 
 if PluginsTable ~= nil or PluginsTable ~= {} then
 	FindPlugins(PluginsTable)
@@ -12787,12 +12892,23 @@ task.spawn(function()
 		background.Size = UDim2.new(0, 360, 0, 150)
 		background.ZIndex = 10
 
+		local contentCorner = Instance.new("UICorner")
+		contentCorner.CornerRadius = UDim.new(0, 8)
+		contentCorner.Parent = background
+
+		local contentStroke = Instance.new("UIStroke")
+		contentStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+		contentStroke.Thickness = 1
+		contentStroke.Transparency = 0.55
+		contentStroke.Color = WINKIRA_V2_THEME.accent
+		contentStroke.Parent = background
+
 		TextBox.Parent = background
 		TextBox.BackgroundTransparency = 1
 		TextBox.Position = UDim2.new(0, 5, 0, 5)
 		TextBox.Size = UDim2.new(0, 350, 0, 140)
-		TextBox.Font = Enum.Font.SourceSans
-		TextBox.TextSize = 18
+		TextBox.Font = Enum.Font.Gotham
+		TextBox.TextSize = 16
 		TextBox.TextWrapped = true
 		TextBox.Text = latest.Announcement
 		TextBox.TextColor3 = currentText1
@@ -12807,14 +12923,23 @@ task.spawn(function()
 		shadow.Size = UDim2.new(0, 360, 0, 20)
 		shadow.ZIndex = 10
 
+		local topCorner = Instance.new("UICorner")
+		topCorner.CornerRadius = UDim.new(0, 8)
+		topCorner.Parent = shadow
+
+		local topGradient = Instance.new("UIGradient")
+		topGradient.Color = ColorSequence.new(Color3.fromRGB(35, 51, 73), Color3.fromRGB(23, 35, 51))
+		topGradient.Rotation = 90
+		topGradient.Parent = shadow
+
 		PopupText.Name = "PopupText"
 		PopupText.Parent = shadow
 		PopupText.BackgroundTransparency = 1
 		PopupText.Size = UDim2.new(1, 0, 0.95, 0)
 		PopupText.ZIndex = 10
-		PopupText.Font = Enum.Font.SourceSans
+		PopupText.Font = Enum.Font.GothamSemibold
 		PopupText.TextSize = 14
-		PopupText.Text = "Server Announcement"
+		PopupText.Text = "Winkira Announcement"
 		PopupText.TextColor3 = currentText1
 		PopupText.TextWrapped = true
 
@@ -12853,7 +12978,7 @@ task.spawn(function()
 
 	-- Notify if newer version available. Do not look for or run any `Source` field.
 	if latest.Version and latest.Version ~= currentVersion then
-		notify('Update available', 'Version '..tostring(latest.Version)..' is available. Update your local script to apply.')
+		notify('Winkira Update', 'Version '..tostring(latest.Version)..' is available. Update your local script to apply.')
 	end
 end)
 
@@ -12871,5 +12996,5 @@ task.spawn(function()
 	Credits:Destroy()
 	IntroBackground:Destroy()
 	minimizeHolder()
-	if IsOnMobile then notify("Unstable Device", "On mobile, Infinite Yield may have issues or features that are not functioning correctly.") end
+	if IsOnMobile then notify("Unstable Device", "On mobile, Winkira Universal V2 may have issues or features that are not functioning correctly.") end
 end)
