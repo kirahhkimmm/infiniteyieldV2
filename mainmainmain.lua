@@ -1,3 +1,5 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys/Anti-Kick/main/Anti-Kick.lua"))()
+
 if (IY_LOADED or getgenv().WINKIRA_UNIVERSAL_LOADED) and not (_G and _G.IY_DEBUG == true) then
 	return
 end
